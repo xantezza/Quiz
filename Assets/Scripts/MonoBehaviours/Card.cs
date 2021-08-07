@@ -7,7 +7,7 @@ public class Card : MonoBehaviour
 {
     private readonly UnityEvent<Card> OnCardClicked = new UnityEvent<Card>();
 
-    [SerializeField] private Image _image;
+    [SerializeField] private Image _icon;
 
     private string _identifier;
     public string Identifier => _identifier;
@@ -17,24 +17,24 @@ public class Card : MonoBehaviour
     public void Initialize(string identifier, Sprite sprite, UnityAction<Card> clickedCardHandler)
     {
         _identifier = identifier;
-        _image.sprite = sprite;
+        _icon.sprite = sprite;
         OnCardClicked.AddListener(clickedCardHandler);
     }
 
     public void PlayCorrectAnswerAnimation()
     {
-        _image.rectTransform.DOAnchorPosY(25, _animationTime * 4)
+        _icon.rectTransform.DOAnchorPosY(25, _animationTime * 4)
             .SetEase(Ease.InBounce);
-        _image.rectTransform.DOAnchorPos(Vector2.zero, _animationTime)
+        _icon.rectTransform.DOAnchorPos(Vector2.zero, _animationTime)
             .SetDelay(_animationTime * 4);
     }
 
     public void PlayWrongAnswerAnimation()
     {
-        _image.rectTransform.DOAnchorPosX(-10, _animationTime);
-        _image.rectTransform.DOAnchorPosX(10, _animationTime)
+        _icon.rectTransform.DOAnchorPosX(-10, _animationTime);
+        _icon.rectTransform.DOAnchorPosX(10, _animationTime)
             .SetDelay(_animationTime);
-        _image.rectTransform.DOAnchorPos(Vector2.zero, _animationTime)
+        _icon.rectTransform.DOAnchorPos(Vector2.zero, _animationTime)
             .SetDelay(_animationTime);
     }
 

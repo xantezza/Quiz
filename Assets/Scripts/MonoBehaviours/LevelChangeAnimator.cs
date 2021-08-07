@@ -18,28 +18,25 @@ public class LevelChangeAnimator : MonoBehaviour
         _image = _blackPanel.GetComponent<Image>();
     }
 
-    public IEnumerator PlayRestartAnimatonBeforeButtonClick()
+    public void PlayRestartAnimatonBeforeButtonClick()
+    {
+        _blackPanel.SetActive(true);
+        _image.DOFade(1f, _animationTime).OnComplete(() => _restartButton.SetActive(true));
+    }
+
+    public void PlayRestartAnimatonAfterButtonClick()
+    {
+        _image.DOFade(0f, _animationTime).OnComplete(() =>
+        {
+            _restartButton.SetActive(false);
+            _blackPanel.SetActive(false);
+        });
+    }
+
+    public void PlayChangeLevelAnimation()
     {
         _blackPanel.SetActive(true);
         _image.DOFade(1f, _animationTime);
-        yield return new WaitForSeconds(_animationTime);
-        _restartButton.SetActive(true);
-    }
-
-    public IEnumerator PlayRestartAnimatonAfterButtonClick()
-    {
-        _image.DOFade(0f, _animationTime);
-        _restartButton.SetActive(false);
-        yield return new WaitForSeconds(_animationTime);
-        _blackPanel.SetActive(false);
-    }
-
-    public IEnumerator PlayChangeLevelAnimation()
-    {
-        _blackPanel.SetActive(true);
-        _image.DOFade(1f, _animationTime);
-        _image.DOFade(0f, _animationTime).SetDelay(_animationTime);
-        yield return new WaitForSeconds(_animationTime);
-        _blackPanel.SetActive(false);
+        _image.DOFade(0f, _animationTime).SetDelay(_animationTime).OnComplete(() => _blackPanel.SetActive(false));
     }
 }

@@ -21,21 +21,22 @@ public class LevelsManager : MonoBehaviour
     {
         var randomBundleIndex = Random.Range(0, _cardBundles.Length);
         var currentBundle = _cardBundles[randomBundleIndex];
-        var currentCardsData = currentBundle.CardData;
+
+        var shuffledCardsData = currentBundle.CardData.OrderBy(x => Random.value).ToArray();
+
         var levelData = _currentLevelBundle.LoadLevel(level);
 
-        if (currentCardsData.Length < levelData.TotalCardsOnLevel)
+        if (shuffledCardsData.Length < levelData.TotalCardsOnLevel)
         {
             Debug.LogError($"Not enough cards in {currentBundle} to create a level requiring {levelData.TotalCardsOnLevel} cards");
             return;
         }
+        System.Array.Resize(ref shuffledCardsData, levelData.TotalCardsOnLevel);
 
-        System.Array.Resize(ref currentCardsData, levelData.TotalCardsOnLevel);
-
-        _quizTasks.CreateRandomTaskFromArray(currentCardsData, NextLevel);
+        _quizTasks.CreateRandomTaskFromArray(shuffledCardsData, NextLevel);
 
         _cardPlacer.SetGridParameters(levelData.Columns);
-        _cardPlacer.PlaceCards(currentCardsData.OrderBy(x => Random.value).ToArray(), _quizTasks.CheckResultAndAnimateCard);
+        _cardPlacer.PlaceCards(shuffledCardsData, _quizTasks.CheckResultAndAnimateCard);
     }
 
     public void NextLevel()
@@ -43,11 +44,11 @@ public class LevelsManager : MonoBehaviour
         _startingLevelIndex++;
         if (_startingLevelIndex == _currentLevelBundle.GetTotalLevels())
         {
-            StartCoroutine(_animator.PlayRestartAnimatonBeforeButtonClick());
+            _animator.PlayRestartAnimatonBeforeButtonClick();
         }
         else
         {
-            StartCoroutine(_animator.PlayChangeLevelAnimation());
+            _animator.PlayChangeLevelAnimation();
             StartLevel(_startingLevelIndex);
         }
     }
@@ -57,7 +58,7 @@ public class LevelsManager : MonoBehaviour
         _startingLevelIndex = 0;
         _quizTasks.WipePreviousTasks();
 
-        StartCoroutine(_animator.PlayRestartAnimatonAfterButtonClick());
+        _animator.PlayRestartAnimatonAfterButtonClick();
 
         StartLevel(_startingLevelIndex);
     }

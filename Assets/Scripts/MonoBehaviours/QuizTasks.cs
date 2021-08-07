@@ -11,6 +11,12 @@ public class QuizTasks : MonoBehaviour
     private List<string> _previousTaskIdentifiers = new List<string>();
 
     private UnityAction _correctResultHandler;
+    private TextMeshPro _textMesh;
+
+    private void Start()
+    {
+        _textMesh = GetComponent<TextMeshPro>();
+    }
 
     public void WipePreviousTasks()
     {
@@ -27,7 +33,7 @@ public class QuizTasks : MonoBehaviour
             {
                 _previousTaskIdentifiers.Add(cardData.Identifier);
                 _currentTaskIdentifier = cardData.Identifier;
-                GetComponent<TextMeshPro>().text = "Find " + cardData.Identifier;
+                _textMesh.text = "Find " + cardData.Identifier;
                 return;
             }
         }
